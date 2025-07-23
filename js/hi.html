@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colorful Sidebar Template</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f0f2f5;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(to bottom, #4f46e5, #3b82f6);
+      color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .sidebar button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .section {
+      display: none;
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section h3 {
+      margin-bottom: 10px;
+      color: #3b82f6;
+      font-size: 20px;
+    }
+
+    .section p {
+      color: #333;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>TEACHERS  PANNEL</h2>
+     <button onclick="showSection('dashboard')">📊 Dashboard</button>
+    <button onclick="showSection('addStudent')">➕ Add Student</button>
+    <button onclick="showSection('manageStudent')">👤 Manage Student</button>
+    <button onclick="showSection('manageAttendance')">📅 Manage Attendance</button>
+    <button onclick="showSection('updateMark')">📊 Update Mark</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Add Student -->
+
+     <div id="dashboard" class="section" >
+      <h3>DASHBOARD</h3>
+      <p>Fill out this form to add a new student to the system.</p>
+    </div>
+
+    <div id="addStudent" class="section" >
+      <h3>Add Student</h3>
+      <p>Fill out this form to add a new student to the system.</p>
+      <h2>Add / Update Student</h2> <input id="id" />
+        <input id="name" />
+        <input id="email" />
+        <select id="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+        </select>
+        <input id="department" />
+        <input id="year" type="number" />
+        <input id="quota" />
+        <input id="batch" type="number" />
+        <button onclick="submitStudent()">Add Student</button>
+        <button onclick="clearForm()">Clear</button>;
+    </div>
+
+    <!-- Manage Student -->
+    <div id="manageStudent" class="section">
+      <h3>Manage Student</h3>
+      <p>Here you can view, edit, or remove student information.</p>
+    </div>
+
+    <!-- Manage Attendance -->
+    <div id="manageAttendance" class="section">
+      <h3>Manage Attendance</h3>
+      <p>Track and update attendance records for students.</p>
+    </div>
+
+    <!-- Update Mark -->
+    <div id="updateMark" class="section">
+      <h3>Update Mark</h3>
+      <p>Enter or change student marks and performance data here.</p>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/admin.js">
+    function showSection(id) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+    window.onload=function(){
+        document.getElementById('dashboard').classList.add('active');
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Profile Card</title>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .profile-card {
+      background: #fff;
+      width: 300px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .profile-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    .profile-card h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #333;
+    }
+
+    .profile-card p.title {
+      color: #888;
+      font-size: 14px;
+      margin: 5px 0 15px;
+    }
+
+    .profile-card p.bio {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .profile-card a {
+      text-decoration: none;
+      color: #007bff;
+      margin: 0 8px;
+      font-size: 18px;
+    }
+
+    .profile-card a:hover {
+      color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-card">
+    <img src="image.png" alt="Profile Picture">
+    <h2>Ranjith  Kumar A</h2>
+    <p class="title">Web Developer</p>
+    <p class="bio">Passionate about building user-friendly web applications and exploring new tech trends.</p>
+    <div id="clock"  style="
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+"></div>
+    <div class="social-links">
+      <a href="#" title="LinkedIn">&#x1F465;</a>
+      <a href="#" title="GitHub">&#x1F4BB;</a>
+      <a href="#" title="Email">&#x2709;&#xFE0F;</a>
+    </div>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>
