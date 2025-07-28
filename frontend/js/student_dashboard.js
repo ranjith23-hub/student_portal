@@ -14,10 +14,15 @@ async function loadStudent() {
     const student = await res.json();
 
     document.getElementById('student-details').innerHTML = `
-        <p><b>Name:</b> ${student.name}</p>
-        <p><b>Email:</b> ${student.email}</p>
-        <p><b>Marks:</b> ${student.marks}</p>
-        <p><b>Grade:</b> ${student.grade}</p>
+        <div class="student-card">
+                <p><strong>Roll No:</strong> ${s.id}</p>
+                <p><strong>Name:</strong> ${s.name}</p>
+                <p><strong>Email:</strong> ${s.email}</p>
+                <p><strong>Gender:</strong> ${s.gender}</p>
+                <p><strong>Department:</strong> ${s.department}</p>
+                <p><strong>Quota:</strong> ${s.quota}</p>
+                <p><strong>Batch:</strong> ${s.batch}</p>
+            </div>
         <button onclick="downloadPDF()">Download Marksheet (PDF)</button>
     `;
 }

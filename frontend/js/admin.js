@@ -1,6 +1,26 @@
 let editingStudentId = null;
 
 
+function loadStudentFromEncoded(encodedData) {
+    const student = JSON.parse(decodeURIComponent(encodedData));
+    loadStudent(student);
+}
+
+
+async function loadStudent(s) {
+    document.getElementById('hello').innerHTML = `
+        <div class="student-card">
+                <p><strong>Roll No:</strong> ${s.id}</p>
+                <p><strong>Name:</strong> ${s.name}</p>
+                <p><strong>Email:</strong> ${s.email}</p>
+                <p><strong>Gender:</strong> ${s.gender}</p>
+                <p><strong>Department:</strong> ${s.department}</p>
+                <p><strong>Year:</strong> ${s.year}</p>
+                <p><strong>Quota:</strong> ${s.quota}</p>
+                <p><strong>Batch:</strong> ${s.batch}</p>
+            </div>
+    `;
+}
 
 async function loadStudents() {
     const res = await fetch('http://localhost:8000/admin/students');
@@ -15,35 +35,98 @@ async function loadStudents() {
 
     students.forEach(student => {
         const div = document.createElement('div');
+        const encodedStudent = encodeURIComponent(JSON.stringify(student));
         div.innerHTML = `<div class="student-card">
-    <b>${student.id} - <b>${student.name}</b> (${student.email})</b> - Marks: ${student.marks}
-    <button onclick="" class="stubu">View</button>
-    <button onclick="editStudent(${student.id}, '${student.name}', '${student.email}', ${student.marks})">Edit</button>
-    <button onclick="deleteStudent(${student.id})">Delete</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+  <div>
+    <b>${student.id} - <b>${student.name}</b></b>
   </div>
+  <div>
+    <button class="bu" onclick="loadStudentFromEncoded('${encodedStudent}')">View</button>
+    <button class="bu" onclick="edit('${student.id}')">Edit</button>
+    <button class="bu" onclick="deleteStudent('${student.email}')" style="background-color: red; color: white;">Delete</button>
+  </div>
+</div>
+<hr style="border: 1px solid #ccc; width: 80%;margin-left:10%;">
+
+
         `;
         div.style.marginBottom = '10px';
         container.appendChild(div);
     });
 }
 
+async function  edit(roll)
+{
+    showTag("hello");
+    document.getElementById("hello").innerHTML="";
+    document.getElementById("hello").innerHTML=`
+    <h2>EDIT </h2>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h3 style="margin: 0;">Roll number - ${roll}</h3>
+    <button class="bu" onclick="hideTag('hello')">Close</button>
+  </div>
+    <label class="la">Name :</label>
+    <input class="in" style="text-transform: uppercase;" id="name1" />
+    <label class="la">E-mail :</label>
+    <input class="in" placeholder="eg : abc@gmail.com" id="email1" style="text-transform: lowercase;" />
+    <label class="la">Department :</label>
+        <select class="in" id="department1">
+          <option value="" disabled selected>Select your department</option>
+          <option value="CSE">Computer Science Engineering</option>
+          <option value="MECH">Mechanical Engineering</option>
+          <option value="CIVIL">Civil Engineering</option>
+          <option value="ECE">Electronics and Communication Engineering</option>
+          <option value="EEE">Electrical and Electronics Engineering</option>
+          <option value="CHEMICAL">Chemical Engineering</option>
+          <option value="IT">Information Technology</option>
+          <option value="AIDS">Artificial Intelligence and Data Science</option>
+        </select>
+    <label  class="la" > Year  : </label>
+    <input class="in" id="year1" type="number"/>
+    <button class="bu" onclick="editStudent('${roll}')"> Submit</button>
+    <br>
+    <br>
+    `;
+}
+
+async  function editStudent(roll){
+    const name = document.getElementById('name1').value.trim();
+    const email = document.getElementById('email1').value.trim();
+    const department = document.getElementById('department1').value.trim();
+    const year = parseInt(document.getElementById('year1').value); 
+     const updateData = {
+            name, email, department, year
+        };
+
+        const res = await fetch(`http://localhost:8000/admin/update_student/${roll}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        });
+
+        if (res.ok) {
+            alert('Student updated successfully.');
+            clearForm();
+            loadStudents();
+        } else {
+            alert('Failed to update student.');
+        } 
+}
 function clearForm() {
     editingStudentId = null;
-    document.getElementById('studentId').value = '';
+    document.getElementById('id').value = '';
     document.getElementById('name').value = '';
     document.getElementById('email').value = '';
-    document.getElementById('marks').value = '';
+    document.getElementById('gender').value = '';    
+    document.getElementById('department').value = '';    
+    document.getElementById('year').value = '';    
+    document.getElementById('quota').value = '';    
+    document.getElementById('batch').value = '';
+
     document.querySelector('button[onclick="submitStudent()"]').textContent = 'Add Student';
 }
 
-function editStudent(id, name, email, marks) {
-    editingStudentId = id;
-    document.getElementById('studentId').value = id;
-    document.getElementById('name').value = name;
-    document.getElementById('email').value = email;
-    document.getElementById('marks').value = marks;
-    document.querySelector('button[onclick="submitStudent()"]').textContent = 'Update Student';
-}
 
 async function submitStudent() {
     const id = document.getElementById('id').value.trim();
@@ -162,3 +245,11 @@ async function fetchTeacher(emailInput) {
         document.getElementById('dashboard').classList.add('active');
         fetchTeacher(email);
     };
+
+function hideTag(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+function showTag(id) {
+    document.getElementById(id).style.display = 'block';
+}

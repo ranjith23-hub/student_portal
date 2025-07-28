@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Portal - Admin</title>
   <style>
+
+
+/* Styling for view students section */
+.hello {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.hello  {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+}
+
+.hello p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -222,6 +245,9 @@
       <div class="con">
         <h3>Add Student</h3>
         <p>Fill out this form to add a new student to the system.</p>
+        <label class="la">Roll number  :</label>
+        <input class="in" type="number" id="id" />
+
         <label class="la">Name :</label>
         <input class="in" style="text-transform: uppercase;" id="name" />
 
@@ -272,6 +298,8 @@
     <div id="manageStudent" class="section">
       <h3>Manage Student</h3>
       <p>Here you can view, edit, or remove student information.</p>
+      <div id="manastu"></div>
+      <div id="hello"></div> 
       <div id="student-item"></div>
     </div>
 

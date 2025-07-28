@@ -87,11 +87,9 @@ class StudentCreate(BaseModel):
 
 class StudentUpdate(BaseModel):
     name: str | None = None
-    gender: str | None = None
+    email: str | None = None
     department: str | None = None
     year: int | None = None
-    quota: str | None = None
-    batch: int | None = None
 
 class StudentResponse(StudentCreate):
     class Config:
@@ -152,7 +150,7 @@ def update_student(student_id: str, student: StudentUpdate, db: Session = Depend
 
 @app.delete("/admin/delete_student/{student_id}")
 def delete_student(student_id: str, db: Session = Depends(get_db)):
-    student = db.query(Student).filter(Student.id == student_id).first()
+    student = db.query(Student).filter(Student.email == student_id).first()
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
     db.delete(student)
