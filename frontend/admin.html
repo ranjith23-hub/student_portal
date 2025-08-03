@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Portal - Admin</title>
   <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 
 /* Styling for view students section */
@@ -35,46 +40,28 @@
       height: 100vh;
       background-color: #f0f2f5;
     }
-    .sidebar {
-      width: 250px;
-      background: linear-gradient(to bottom, #4f46e5, #3b82f6);
-      color: white;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    }
 
-    .sidebar h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: bold;
-    }
 
-    .sidebar button {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-align: left;
-      transition: background-color 0.3s;
-    }
+  
 
-    .sidebar button:hover,
-    .sidebar button.active {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
+  .main {
+  margin-left: 250px;
+  padding: 40px 20px;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background-color: #fefefe;
+  width: calc(100vw - 250px);
+}
 
-    .main {
-      flex: 1;
-      padding: 40px;
-    }
+
+
+    
 
     .section {
+      max-width: 900px;
+  margin: 0 auto;
       display: none;
       background-color: white;
       padding: 25px;
@@ -98,14 +85,88 @@
       font-size: 14px;
     }
 
-    .con {
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #1f2937; /* Dark blue-gray */
+  color: #fff;
+  padding: 30px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.sidebar h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: #60a5fa; /* Tailwind-like blue */
+}
+
+.nav-buttons {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar button {
+  padding: 12px 16px;
+  border: none;
+  background-color: transparent;
+  color: #f1f5f9;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+  background-color: #374151;
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+
+
+.sidebar .logout-btn {
+  margin-top: auto;
+  padding: 10px;
+  background-color: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .logout-btn:hover {
+  background-color: #c62828;
+}
+
+
+    .con { 
       max-width: 500px;
-      margin: 50px 50px 50px 40px;
-      margin-left: 25%;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      background-color: #fff;
+      min-width: 80%;
+  margin: 50px auto;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
     }
 
     .la {
@@ -193,9 +254,7 @@
         box-shadow: none;
       }
 
-      .main {
-        padding: 20px;
-      }
+
 
       .con {
         margin: 20px auto;
@@ -213,13 +272,18 @@
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <h2>TEACHERS PANEL</h2>
+  <h2>TEACHERS PANEL</h2>
+  
+  <div class="nav-buttons">
     <button onclick="showSection('dashboard')">📊 Dashboard</button>
     <button onclick="showSection('addStudent')">➕ Add Student</button>
     <button onclick="showSection('manageStudent')">👤 Manage Student</button>
     <button onclick="showSection('manageAttendance')">📅 Manage Attendance</button>
-    <button onclick="showSection('updateMark')">📊 Update Mark</button>
+    <button onclick="showSection('updateMark')">📝 Update Mark</button>
   </div>
+
+  <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+</div>
 
   <!-- Main Content -->
   <div class="main">

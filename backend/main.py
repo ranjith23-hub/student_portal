@@ -10,6 +10,7 @@ from datetime import date
 import os, time
 from passlib.context import CryptContext
 from typing import Optional
+from fastapi.staticfiles import StaticFiles
 
 DATABASE_URL = "postgresql://postgres:ran123@localhost/student_portal"
 
@@ -25,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 class Student(Base):
     __tablename__ = "students"
