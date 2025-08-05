@@ -155,6 +155,36 @@
   background-color: #c62828;
 }
 
+.mark-field {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mark-field label.la {
+  width: 250px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.mark-field input.in {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.mark-field input.in:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
 
     .con { 
       max-width: 500px;
@@ -374,12 +404,62 @@
     </div>
 
     <!-- Update Mark -->
-    <div id="updateMark" class="section">
-      <h3>Update Mark</h3>
-      <p>Enter or change student marks and performance data here.</p>
-    </div>
-
+    <!-- Update Mark -->
+<div id="updateMark" class="section">
+  <h3>Update Mark</h3>
+  <p>Enter or change student marks and performance data here.</p>
+  <div class="mark-field">
+    <label class="la">Roll number :</label>
+    <input class="in" type="number" id="rollno" />
+    <button class="bu" >Confirm</button>
   </div>
+  <label id="na"></label>
+  <hr>
+  <strong style="margin-top: 30px;">SUBJECTS</strong>
+  <div style="margin-top: 15px;" class="mark-field">
+    <label class="la">Software Engineering :</label>
+    <input class="in" type="number" id="sem" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">Computer Networks :</label>
+    <input class="in" type="number" id="cnm" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">Compiler Design :</label>
+    <input class="in" type="number" id="cdm" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">JavaScript Framework :</label>
+    <input class="in" type="number" id="jsm" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">Cloud Computing :</label>
+    <input class="in" type="number" id="cm" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">Web Technology Laboratory :</label>
+    <input class="in" type="number" id="webm" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">Computer Networks Laboratory :</label>
+    <input class="in" type="number" id="cnlm" />
+  </div>
+
+  <div class="mark-field">
+    <label class="la">Compiler Design Laboratory :</label>
+    <input class="in" type="number" id="cdlm" />
+  </div>
+
+  <button class="bu" >Update</button>
+</div>
+
+
 
   <!-- JavaScript -->
   <script  src="./js/admin.js">

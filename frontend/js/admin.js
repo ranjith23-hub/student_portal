@@ -18,7 +18,7 @@ async function loadStudent(s) {
                 <p><strong>Year:</strong> ${s.year}</p>
                 <p><strong>Quota:</strong> ${s.quota}</p>
                 <p><strong>Batch:</strong> ${s.batch}</p>
-            </div>
+            </div>005
     `;
 }
 
