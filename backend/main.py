@@ -105,7 +105,7 @@ def get_db():
     finally:
         db.close()
 
-# Simple admin login - hardcoded for demo
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @app.post("/login")
@@ -129,6 +129,8 @@ def login(
 @app.post("/admin/add_student", response_model=StudentResponse)
 def add_student(student: StudentCreate, db: Session = Depends(get_db)):
     db_student = Student(**student.dict())
+    db_user = User(email=student.email, hashed_password="password", is_admin=False)
+    db.add(db_user)
     db.add(db_student)
     db.commit()
     db.refresh(db_student)
