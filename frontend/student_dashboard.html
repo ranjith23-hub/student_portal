@@ -120,6 +120,7 @@
     .section p {
       color: #333;
       font-size: 14px;
+      margin-bottom: 15px;
     }
 
     .student-card {
@@ -147,22 +148,23 @@
     .con {
       max-width: 500px;
       margin: 20px auto;
-      padding: 30px 40px;
+      padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       background-color: #fff;
-      flex-direction: column;
       display: flex;
+      flex-direction: column;
       justify-content: center;
+      border-left: 6px solid #3498db; /* Match student-card styling */
     }
 
     .la {
       display: block;
       margin-top: 15px;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      font-weight: 600;
       font-size: 14px;
-      color: #333;
+      color: #34495e; /* Match student-card strong text color */
     }
 
     .in {
@@ -172,63 +174,52 @@
       border-radius: 6px;
       font-size: 14px;
       box-sizing: border-box;
-      transition: border-color 0.3s;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #f9fafb; /* Subtle background for inputs */
     }
 
     .in:focus {
-      border-color: #007bff;
+      border-color: #3b82f6; /* Match section h3 color */
       outline: none;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
     }
 
     .bu {
       margin-top: 20px;
-      margin-right: 10px;
-      padding: 10px 20px;
-      background-color: #007bff;
+      padding: 12px 20px;
+      background-color: #3b82f6; /* Match section h3 color */
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      align-self: center; /* Center the button */
     }
 
     .bu:hover {
-      background-color: #0056b3;
+      background-color: #2563eb; /* Darker blue on hover */
+      transform: translateY(-2px);
     }
 
     #error {
-      color: red;
+      color: #e53935; /* Match logout button color for errors */
       text-align: center;
-      margin-top: 10px;
+      margin-top: 15px;
       font-size: 14px;
+      font-weight: 500;
+      min-height: 20px; /* Reserve space to prevent layout shift */
     }
 
-    #attendanceTable {
+    #attendanceTable, #marksTable {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
 
     #attendanceTable th,
-    #attendanceTable td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-
-    #attendanceTable th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
-
-    #marksTable {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
+    #attendanceTable td,
     #marksTable th,
     #marksTable td {
       border: 1px solid #ddd;
@@ -236,6 +227,7 @@
       text-align: left;
     }
 
+    #attendanceTable th,
     #marksTable th {
       background-color: #f2f2f2;
       font-weight: bold;
@@ -261,6 +253,12 @@
 
       .con {
         margin: 20px auto;
+        width: 90%;
+        padding: 20px;
+      }
+
+      .student-card {
+        margin: 10px auto;
         width: 90%;
       }
     }
@@ -290,8 +288,9 @@
     <div id="dashboard" class="section">
       <h3>DASHBOARD</h3>
       <p>Welcome to your student dashboard.</p>
-      <div id="student-details" class="student-card"></div>
-      <button class="bu" onclick="downloadPDF()">Download Marksheet (PDF)</button>
+      <div id="student-details" class="student-card">
+        <p><strong>Loading...</strong></p>
+      </div>
     </div>
 
     <!-- Marks -->
@@ -316,8 +315,8 @@
       <table id="attendanceTable">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Status</th>
+            <th>Subject</th>
+            <th>Attendance Percentage</th>
           </tr>
         </thead>
         <tbody id="attendanceTableBody"></tbody>

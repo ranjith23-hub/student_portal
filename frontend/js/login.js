@@ -24,7 +24,7 @@ async function login(e) {
             if (data.role === "admin") {
                 window.location.href = 'admin.html';
             } else if (data.role === "student") {
-                const res1 = await fetch(`http://localhost:8000/student/${email}`);
+                
                 window.location.href = `student_dashboard.html?email=${encodeURIComponent(email)}`;
             }
         } else {
