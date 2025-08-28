@@ -35,4 +35,20 @@ function logout() {
     window.location.href = 'index.html';
 }
 
+
+ function showSection(id) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if(id=='manageStudent')
+      {
+            loadStudents();
+      }
+      else if(id=='dashboard')
+      {
+            const email = localStorage.getItem('loggedInEmail');
+            fetchTeacher(email);
+      }
+    }
+    
 window.onload = loadStudent;
