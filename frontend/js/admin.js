@@ -1,24 +1,22 @@
 let editingStudentId = null;
 
-
 function loadStudentFromEncoded(encodedData) {
     const student = JSON.parse(decodeURIComponent(encodedData));
     loadStudent(student);
 }
 
-
 async function loadStudent(s) {
     document.getElementById('hello').innerHTML = `
         <div class="student-card">
-                <p><strong>Roll No:</strong> ${s.id}</p>
-                <p><strong>Name:</strong> ${s.name}</p>
-                <p><strong>Email:</strong> ${s.email}</p>
-                <p><strong>Gender:</strong> ${s.gender}</p>
-                <p><strong>Department:</strong> ${s.department}</p>
-                <p><strong>Year:</strong> ${s.year}</p>
-                <p><strong>Quota:</strong> ${s.quota}</p>
-                <p><strong>Batch:</strong> ${s.batch}</p>
-            </div>005
+            <p><strong>Roll No:</strong> ${s.id}</p>
+            <p><strong>Name:</strong> ${s.name}</p>
+            <p><strong>Email:</strong> ${s.email}</p>
+            <p><strong>Gender:</strong> ${s.gender}</p>
+            <p><strong>Department:</strong> ${s.department}</p>
+            <p><strong>Year:</strong> ${s.year}</p>
+            <p><strong>Quota:</strong> ${s.quota}</p>
+            <p><strong>Batch:</strong> ${s.batch}</p>
+        </div>
     `;
 }
 
@@ -38,81 +36,79 @@ async function loadStudents() {
         const encodedStudent = encodeURIComponent(JSON.stringify(student));
         div.innerHTML = `<div class="student-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-  <div>
-    <b>${student.id} - <b>${student.name}</b></b>
-  </div>
-  <div>
-    <button class="bu" onclick="loadStudentFromEncoded('${encodedStudent}')">View</button>
-    <button class="bu" onclick="edit('${student.id}')">Edit</button>
-    <button class="bu" onclick="deleteStudent('${student.email}')" style="background-color: red; color: white;">Delete</button>
-  </div>
-</div>
-<hr style="border: 1px solid #ccc; width: 80%;margin-left:10%;">
-
-
+      <div>
+        <b>${student.id} - <b>${student.name}</b></b>
+      </div>
+      <div>
+        <button class="bu" onclick="loadStudentFromEncoded('${encodedStudent}')">View</button>
+        <button class="bu" onclick="edit('${student.id}')">Edit</button>
+        <button class="bu" onclick="deleteStudent('${student.email}')" style="background-color: red; color: white;">Delete</button>
+      </div>
+    </div>
+    <hr style="border: 1px solid #ccc; width: 80%;margin-left:10%;">
         `;
         div.style.marginBottom = '10px';
         container.appendChild(div);
     });
 }
 
-async function  edit(roll)
-{
+async function edit(roll) {
     showTag("hello");
-    document.getElementById("hello").innerHTML="";
-    document.getElementById("hello").innerHTML=`
-    <h2>EDIT </h2>
+    document.getElementById("hello").innerHTML = "";
+    document.getElementById("hello").innerHTML = `
+    <h3>EDIT</h3>
     <div style="display: flex; justify-content: space-between; align-items: center;">
     <h3 style="margin: 0;">Roll number - ${roll}</h3>
     <button class="bu" onclick="hideTag('hello')">Close</button>
-  </div>
+    </div>
     <label class="la">Name :</label>
     <input class="in" style="text-transform: uppercase;" id="name1" />
     <label class="la">E-mail :</label>
     <input class="in" placeholder="eg : abc@gmail.com" id="email1" style="text-transform: lowercase;" />
     <label class="la">Department :</label>
-        <select class="in" id="department1">
-          <option value="" disabled selected>Select your department</option>
-          <option value="CSE">Computer Science Engineering</option>
-          <option value="MECH">Mechanical Engineering</option>
-          <option value="CIVIL">Civil Engineering</option>
-          <option value="ECE">Electronics and Communication Engineering</option>
-          <option value="EEE">Electrical and Electronics Engineering</option>
-          <option value="CHEMICAL">Chemical Engineering</option>
-          <option value="IT">Information Technology</option>
-          <option value="AIDS">Artificial Intelligence and Data Science</option>
-        </select>
-    <label  class="la" > Year  : </label>
+    <select class="in" id="department1">
+      <option value="" disabled selected>Select your department</option>
+      <option value="CSE">Computer Science Engineering</option>
+      <option value="MECH">Mechanical Engineering</option>
+      <option value="CIVIL">Civil Engineering</option>
+      <option value="ECE">Electronics and Communication Engineering</option>
+      <option value="EEE">Electrical and Electronics Engineering</option>
+      <option value="CHEMICAL">Chemical Engineering</option>
+      <option value="IT">Information Technology</option>
+      <option value="AIDS">Artificial Intelligence and Data Science</option>
+    </select>
+    <label class="la">Year :</label>
     <input class="in" id="year1" type="number"/>
-    <button class="bu" onclick="editStudent('${roll}')"> Submit</button>
+    <button class="bu" onclick="editStudent('${roll}')">Submit</button>
     <br>
     <br>
     `;
 }
 
-async  function editStudent(roll){
+async function editStudent(roll) {
     const name = document.getElementById('name1').value.trim();
     const email = document.getElementById('email1').value.trim();
     const department = document.getElementById('department1').value.trim();
     const year = parseInt(document.getElementById('year1').value); 
-     const updateData = {
-            name, email, department, year
-        };
+    const updateData = {
+        name, email, department, year
+    };
 
-        const res = await fetch(`http://localhost:8000/admin/update_student/${roll}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updateData)
-        });
+    const res = await fetch(`http://localhost:8000/admin/update_student/${roll}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData)
+    });
 
-        if (res.ok) {
-            alert('Student updated successfully.');
-            clearForm();
-            loadStudents();
-        } else {
-            alert('Failed to update student.');
-        } 
+    if (res.ok) {
+        alert('Student updated successfully.');
+        clearForm();
+        loadStudents();
+    } else {
+        alert('Failed to update student.');
+    } 
 }
+
 function clearForm() {
     editingStudentId = null;
     document.getElementById('id').value = '';
@@ -127,7 +123,6 @@ function clearForm() {
     document.querySelector('button[onclick="submitStudent()"]').textContent = 'Add Student';
 }
 
-
 async function submitStudent() {
     const id = document.getElementById('id').value.trim();
     const name = document.getElementById('name').value.trim();
@@ -138,7 +133,7 @@ async function submitStudent() {
     const quota = document.getElementById('quota').value.trim();
     const batch = parseInt(document.getElementById('batch').value);
 
-    if (!id || !name || !email || !gender || !department || isNaN(year) || !quota || isNaN(batch) ) {
+    if (!id || !name || !email || !gender || !department || isNaN(year) || !quota || isNaN(batch)) {
         alert("Please fill all fields correctly.");
         return;
     }
@@ -148,7 +143,6 @@ async function submitStudent() {
     };
 
     if (editingStudentId) {
-        // Update student (only editable fields)
         const updateData = {
             name, gender, department, year, quota, batch
         };
@@ -167,7 +161,6 @@ async function submitStudent() {
             alert('Failed to update student.');
         }
     } else {
-        // Add student
         const res = await fetch('http://localhost:8000/admin/add_student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -184,7 +177,6 @@ async function submitStudent() {
     }
 }
 
-
 async function deleteStudent(id) {
     if (!confirm('Are you sure you want to delete this student?')) return;
     const res = await fetch(`http://localhost:8000/admin/delete_student/${id}`, {
@@ -199,52 +191,55 @@ async function deleteStudent(id) {
 }
 
 async function fetchTeacher(emailInput) {
-  const teacherDetails = document.getElementById("teacherDetails");
-  console.log("fetchTeacher called with:", emailInput);  // ✅ this is safe
+    const teacherDetails = document.getElementById("teacherDetails");
+    console.log("fetchTeacher called with:", emailInput);
 
-  try {
-    const res = await fetch(
-  `http://localhost:8000/api/teachers/by-email/${emailInput}`
-);
+    try {
+        const res = await fetch(
+            `http://localhost:8000/api/teachers/by-email/${emailInput}`
+        );
 
-    if (!res.ok) {
-      throw new Error("Teacher not found");
+        if (!res.ok) {
+            throw new Error("Teacher not found");
+        }
+        const teacher = await res.json();
+        document.getElementById("tEmail").innerText = teacher.email;
+        document.getElementById("tDepartment").innerText = teacher.department;
+        document.getElementById("tSubject").innerText = teacher.subject;
+        document.getElementById("tPhone").innerText = teacher.phone;
+        document.getElementById("tDOB").innerText = teacher.dob || "N/A";
+        document.getElementById("tExperience").innerText = teacher.experience ?? "0";
+        document.getElementById("tDOJ").innerText = teacher.date_of_joining || "N/A";
+        teacherDetails.style.display = "block";
+    } catch (error) {
+        alert(error.message);
+        teacherDetails.style.display = "none";
     }
-    const teacher = await res.json();
-    document.getElementById("tName").innerText = teacher.name;
-    document.getElementById("tEmail").innerText = teacher.email;
-    document.getElementById("tDepartment").innerText = teacher.department;
-    document.getElementById("tSubject").innerText = teacher.subject;
-    document.getElementById("tPhone").innerText = teacher.phone;
-    document.getElementById("tDOB").innerText = teacher.dob || "N/A";
-    document.getElementById("tExperience").innerText = teacher.experience ?? "0";
-    document.getElementById("tDOJ").innerText = teacher.date_of_joining || "N/A";
-    teacherDetails.style.display = "block";
-  } catch (error) {
-    alert(error.message);
-    teacherDetails.style.display = "none";
-  }
 }
 
- function showSection(id) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => section.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      if(id=='manageStudent')
-      {
-            loadStudents();
-      }
-      else if(id=='dashboard')
-      {
-            const email = localStorage.getItem('loggedInEmail');
-            fetchTeacher(email);
-      }
-    }
-    window.onload=function(){
+function showSection(id) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => section.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'manageStudent') {
+        loadStudents();
+    } else if (id === 'dashboard') {
         const email = localStorage.getItem('loggedInEmail');
-        document.getElementById('dashboard').classList.add('active');
         fetchTeacher(email);
-    };
+    } else if (id === 'manageAttendance') {
+        document.getElementById('manageAttendanceCN').style.display = 'none';
+        document.getElementById('manageAttendanceSE').style.display = 'none';
+        document.getElementById('manageAttendanceCD').style.display = 'none';
+        document.getElementById('manageAttendanceJS').style.display = 'none';
+        document.getElementById('manageAttendanceCloud').style.display = 'none';
+    }
+}
+
+window.onload = function() {
+    const email = localStorage.getItem('loggedInEmail');
+    document.getElementById('dashboard').classList.add('active');
+    fetchTeacher(email);
+};
 
 function hideTag(id) {
     document.getElementById(id).style.display = 'none';
@@ -252,4 +247,67 @@ function hideTag(id) {
 
 function showTag(id) {
     document.getElementById(id).style.display = 'block';
+}
+
+
+function submitMarks() {
+    const rollNumber = document.getElementById('rollNumberInput').value;
+    const cnMarks = document.getElementById('marksCN').value;
+    const seMarks = document.getElementById('marksSE').value;
+    const cdMarks = document.getElementById('marksCD').value;
+    const jsMarks = document.getElementById('marksJS').value;
+    const cloudMarks = document.getElementById('marksCloud').value;
+
+    // Validate inputs
+    if (!rollNumber) {
+        alert('Please enter a roll number');
+        return;
+    }
+
+    const marksData = {
+        roll_no: rollNumber,
+        cn_marks: cnMarks ? parseFloat(cnMarks) : null,
+        se_marks: seMarks ? parseFloat(seMarks) : null,
+        cd_marks: cdMarks ? parseFloat(cdMarks) : null,
+        js_marks: jsMarks ? parseFloat(jsMarks) : null,
+        cloud_marks: cloudMarks ? parseFloat(cloudMarks) : null
+    };
+
+    fetch('http://localhost:8000/api/marks', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(marksData)
+    })
+    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+    .then(({ status, body }) => {
+        if (status === 200) {
+            alert('Marks added successfully!');
+            // Clear form
+            document.getElementById('rollNumberInput').value = '';
+            document.getElementById('marksCN').value = '';
+            document.getElementById('marksSE').value = '';
+            document.getElementById('marksCD').value = '';
+            document.getElementById('marksJS').value = '';
+            document.getElementById('marksCloud').value = '';
+            
+            // Optionally update marks display
+            const marksContainer = document.getElementById('marksContainer');
+            marksContainer.innerHTML += `
+                <p>Roll No: ${body.marks.roll_no}, 
+                CN: ${body.marks.cn_marks || '-'}, 
+                SE: ${body.marks.se_marks || '-'}, 
+                CD: ${body.marks.cd_marks || '-'}, 
+                JS: ${body.marks.js_marks || '-'}, 
+                Cloud: ${body.marks.cloud_marks || '-'}</p>
+            `;
+        } else {
+            alert(`Error: ${body.error}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while submitting marks');
+    });
 }

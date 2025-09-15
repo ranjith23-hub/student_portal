@@ -1,67 +1,105 @@
-<!DOCTYPE html>
+<!DOCTYPE html  ng-app="myApp">
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Portal - Admin</title>
+  <title>TEACHERS PANEL</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-/* Styling for view students section */
-.hello {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.hello  {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 6px;
-  background-color: #fdfdfd;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-}
-
-.hello p {
-  margin: 5px 0;
-  font-size: 14px;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       height: 100vh;
       background-color: #f0f2f5;
     }
 
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background-color: #1f2937;
+      color: #fff;
+      padding: 30px 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
 
-  
+    .sidebar h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+      text-align: center;
+      font-weight: bold;
+      color: #60a5fa;
+    }
 
-  .main {
-  margin-left: 250px;
-  padding: 40px 20px;
-  min-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  background-color: #fefefe;
-  width: calc(100vw - 250px);
-}
+    .nav-buttons {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
+    .sidebar button {
+      padding: 12px 16px;
+      border: none;
+      background-color: transparent;
+      color: #f1f5f9;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
 
+    .sidebar button:hover,
+    .sidebar button.active {
+      background-color: #374151;
+      color: #ffffff;
+      transform: translateX(4px);
+    }
 
-    
+    .sidebar .logout-btn {
+      margin-top: auto;
+      padding: 10px;
+      background-color: #e53935;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar .logout-btn:hover {
+      background-color: #c62828;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 40px 20px;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      background-color: #fefefe;
+      width: calc(100vw - 250px);
+    }
 
     .section {
       max-width: 900px;
-  margin: 0 auto;
+      margin: 0 auto;
       display: none;
       background-color: white;
       padding: 25px;
@@ -83,129 +121,51 @@
     .section p {
       color: #333;
       font-size: 14px;
+      margin-bottom: 15px;
     }
 
-.sidebar {
-  width: 250px;
-  height: 100vh;
-  background-color: #1f2937; /* Dark blue-gray */
-  color: #fff;
-  padding: 30px 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
+    .student-card {
+      background-color: #ecf0f1;
+      border-left: 6px solid #3498db;
+      padding: 20px 25px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
 
-.sidebar h2 {
-  font-size: 24px;
-  margin-bottom: 30px;
-  text-align: center;
-  font-weight: bold;
-  color: #60a5fa; /* Tailwind-like blue */
-}
+    .student-card p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #555;
+    }
 
-.nav-buttons {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+    .student-card p strong {
+      color: #34495e;
+      width: 130px;
+      display: inline-block;
+    }
 
-.sidebar button {
-  padding: 12px 16px;
-  border: none;
-  background-color: transparent;
-  color: #f1f5f9;
-  border-radius: 6px;
-  text-align: left;
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.sidebar button:hover,
-.sidebar button.active {
-  background-color: #374151;
-  color: #ffffff;
-  transform: translateX(4px);
-}
-
-
-
-.sidebar .logout-btn {
-  margin-top: auto;
-  padding: 10px;
-  background-color: #e53935;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar .logout-btn:hover {
-  background-color: #c62828;
-}
-
-.mark-field {
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.mark-field label.la {
-  width: 250px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 0;
-}
-
-.mark-field input.in {
-  flex: 1;
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.3s ease;
-}
-
-.mark-field input.in:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
-}
-
-
-    .con { 
+    .con {
       max-width: 500px;
-      min-width: 80%;
-  margin: 50px auto;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-left: 6px solid #3498db;
     }
 
     .la {
       display: block;
       margin-top: 15px;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      font-weight: 600;
       font-size: 14px;
-      color: #333;
+      color: #34495e;
     }
 
     .in {
@@ -215,65 +175,65 @@
       border-radius: 6px;
       font-size: 14px;
       box-sizing: border-box;
-      transition: border-color 0.3s;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #f9fafb;
     }
 
     .in:focus {
-      border-color: #007bff;
+      border-color: #3b82f6;
       outline: none;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
     }
 
     .bu {
       margin-top: 20px;
-      margin-right: 10px;
-      padding: 10px 20px;
-      background-color: #007bff;
+      padding: 12px 20px;
+      background-color: #3b82f6;
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      align-self: center;
     }
 
     .bu:hover {
-      background-color: #0056b3;
+      background-color: #2563eb;
+      transform: translateY(-2px);
     }
 
-    /* Dashboard card */
-    .teacher-card {
-      background-color: #ecf0f1;
-      border-left: 6px solid #3498db;
-      padding: 20px 25px;
-      border-radius: 8px;
-      margin-top: 35px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 600px;
-    }
-
-    .teacher-card h3 {
-      margin-top: 15;
-      margin-bottom: 15px;
-      font-size: 24px;
-      color: #2c3e50;
-      font-weight: 700;
-    }
-
-    .teacher-card p {
-      margin: 8px 0;
-      font-size: 16px;
-      color: #555;
-    }
-
-    .teacher-card p strong {
-      color: #34495e;
-      width: 130px;
-      display: inline-block;
+    #error {
+      color: #e53935;
+      text-align: center;
       margin-top: 15px;
+      font-size: 14px;
+      font-weight: 500;
+      min-height: 20px;
     }
 
-    /* Responsive Design */
+    #attendanceTable, #marksTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    #attendanceTable th,
+    #attendanceTable td,
+    #marksTable th,
+    #marksTable td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    #attendanceTable th,
+    #marksTable th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
     @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -281,13 +241,25 @@
 
       .sidebar {
         width: 100%;
-        box-shadow: none;
+        height: auto;
+        position: relative;
+        border-radius: 0;
       }
 
-
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
 
       .con {
         margin: 20px auto;
+        width: 90%;
+        padding: 20px;
+      }
+
+      .student-card {
+        margin: 10px auto;
         width: 90%;
       }
     }
@@ -299,31 +271,23 @@
   </style>
 </head>
 <body>
-
-  <!-- Sidebar -->
   <div class="sidebar">
-  <h2>TEACHERS PANEL</h2>
-  
-  <div class="nav-buttons">
-    <button onclick="showSection('dashboard')">📊 Dashboard</button>
-    <button onclick="showSection('addStudent')">➕ Add Student</button>
-    <button onclick="showSection('manageStudent')">👤 Manage Student</button>
-    <button onclick="showSection('manageAttendance')">📅 Manage Attendance</button>
-    <button onclick="showSection('updateMark')">📝 Update Mark</button>
+    <h2>TEACHERS PANEL</h2>
+    <div class="nav-buttons">
+      <button onclick="showSection('dashboard')">📊 Dashboard</button>
+      <button onclick="showSection('addStudent')">➕ Add Student</button>
+      <button onclick="showSection('manageStudent')">👤 Manage Student</button>
+      <button onclick="showSection('manageAttendance')">📅 Manage Attendance</button>
+      <button onclick="showSection('manageMarks')">📝 Manage Marks</button>
+    </div>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
   </div>
 
-  <a href="../frontend/index.html" ><button >🚪 Logout</button></a>
-</div>
-
-  <!-- Main Content -->
   <div class="main">
-
-    <!-- Dashboard -->
-    <div id="dashboard" class="section">
+    <div id="dashboard" class="section active">
       <h3>DASHBOARD</h3>
       <p>Welcome to the teacher's dashboard.</p>
-      <div class="teacher-card" id="teacherDetails" style="display:none;">
-        <h3 id="tName"></h3>
+      <div id="teacherDetails" class="student-card">
         <p><strong>Email:</strong> <span id="tEmail"></span></p>
         <p><strong>Department:</strong> <span id="tDepartment"></span></p>
         <p><strong>Subject:</strong> <span id="tSubject"></span></p>
@@ -334,28 +298,20 @@
       </div>
     </div>
 
-    <!-- Add Student -->
     <div id="addStudent" class="section">
+      <h3>Add Student</h3>
+      <p>Fill out this form to add a new student to the system.</p>
       <div class="con">
-        <h3>Add Student</h3>
-        <p>Fill out this form to add a new student to the system.</p>
-        <label class="la">Roll number  :</label>
-        <input class="in" type="number" id="id" />
-
-        <label class="la">Name :</label>
-        <input class="in" style="text-transform: uppercase;" id="name" />
-
-        <label class="la">E-mail :</label>
-        <input class="in" placeholder="eg : abc@gmail.com" id="email" style="text-transform: lowercase;" />
-
+        <label class="la">Roll number :</label><input class="in" id="id" /><br>
+        <label class="la">Name :</label><input class="in" id="name" /><br>
+        <label class="la">E-mail :</label><input class="in" id="email" /><br>
         <label class="la">Select gender :</label>
         <select class="in" id="gender">
           <option value="" disabled selected>Select your gender</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Other">Other</option>
-        </select>
-
+        </select><br>
         <label class="la">Department :</label>
         <select class="in" id="department">
           <option value="" disabled selected>Select your department</option>
@@ -367,128 +323,60 @@
           <option value="CHEMICAL">Chemical Engineering</option>
           <option value="IT">Information Technology</option>
           <option value="AIDS">Artificial Intelligence and Data Science</option>
-        </select>
-
-        <label class="la">Year :</label>
-        <input class="in" id="year" type="number" />
-
+        </select><br>
+        <label class="la">Year :</label><input class="in" id="year" type="number" /><br>
         <label class="la">Quota :</label>
         <select class="in" id="quota">
           <option value="" disabled selected>Select your quota</option>
           <option value="Aided">Aided</option>
-          <option value="SS">Self supported(SS)</option>
+          <option value="Self supported(SS)">Self supported(SS)</option>
           <option value="Management">Management</option>
-        </select>
-
-        <label class="la">Batch number :</label>
-        <input class="in" id="batch" type="number" />
-
+        </select><br>
+        <label class="la">Batch number :</label><input class="in" id="batch" type="number" /><br>
         <button class="bu" onclick="submitStudent()">Add Student</button>
         <button class="bu" onclick="clearForm()">Clear</button>
       </div>
     </div>
 
-    <!-- Manage Student -->
     <div id="manageStudent" class="section">
       <h3>Manage Student</h3>
       <p>Here you can view, edit, or remove student information.</p>
-      <div id="manastu"></div>
-      <div id="hello"></div> 
       <div id="student-item"></div>
+      <div id="hello" class="student-card"></div>
     </div>
 
-    <!-- Manage Attendance -->
     <div id="manageAttendance" class="section">
       <h3>Manage Attendance</h3>
       <p>Track and update attendance records for students.</p>
+      <label class="la">Enter the Subject :</label>
+      <input name="Subject" class="in" id="subject" placeholder="Enter Subject Name" />
+      <label class ="la">Enter the no of hours : </label>
+      <input name="hours" class="in" id="hours" type="number" placeholder="Enter no of hours" />
+      
+      
     </div>
 
-    <!-- Update Mark -->
-    <!-- Update Mark -->
-<div id="updateMark" class="section">
-  <h3>Update Mark</h3>
-  <p>Enter or change student marks and performance data here.</p>
-  <div class="mark-field">
-    <label class="la">Roll number :</label>
-    <input class="in" type="number" id="rollno" />
-    <button class="bu" >Confirm</button>
-  </div>
-  <label id="na"></label>
-  <hr>
-  <strong style="margin-top: 30px;">SUBJECTS</strong>
-  <div style="margin-top: 15px;" class="mark-field">
-    <label class="la">Software Engineering :</label>
-    <input class="in" type="number" id="sem" />
-  </div>
-
-  <div class="mark-field">
-    <label class="la">Computer Networks :</label>
-    <input class="in" type="number" id="cnm" />
+    <div id="manageMarks" class="section">
+      <h3>Manage Marks</h3>
+        <label class="la">Enter Roll Number :</label>
+        <input class="in" id="rollNumberInput" type="text" placeholder="e.g., 12345" />
+        <label class="la">Computer Networks</label>
+        <input class="in" id="marksCN" type="number" placeholder="Marks out of 100" />
+        <label class="la">Software Engineering</label>    
+        <input class="in" id="marksSE" type="number" placeholder="Marks out of 100" />
+        <label class="la">Compiler Design</label>
+        <input class="in" id="marksCD" type="number" placeholder="Marks out of 100" />
+        <label class="la">JavaScript</label>
+        <input class="in" id="marksJS" type="number" placeholder="Marks out of 100" />
+        <label class="la">Cloud Computing</label>
+        <input class="in" id="marksCloud" type="number" placeholder="Marks out of 100" />
+        <button class="bu" onclick="submitMarks()">Submit Marks</button>
+       
+        </select>
+      <div id="marksContainer"></div>
+    </div>
   </div>
 
-  <div class="mark-field">
-    <label class="la">Compiler Design :</label>
-    <input class="in" type="number" id="cdm" />
-  </div>
-
-  <div class="mark-field">
-    <label class="la">JavaScript Framework :</label>
-    <input class="in" type="number" id="jsm" />
-  </div>
-
-  <div class="mark-field">
-    <label class="la">Cloud Computing :</label>
-    <input class="in" type="number" id="cm" />
-  </div>
-
-  <div class="mark-field">
-    <label class="la">Web Technology Laboratory :</label>
-    <input class="in" type="number" id="webm" />
-  </div>
-
-  <div class="mark-field">
-    <label class="la">Computer Networks Laboratory :</label>
-    <input class="in" type="number" id="cnlm" />
-  </div>
-
-  <div class="mark-field">
-    <label class="la">Compiler Design Laboratory :</label>
-    <input class="in" type="number" id="cdlm" />
-  </div>
-
-  <button class="bu" >Update</button>
-</div>
-
-
-
-  <!-- JavaScript -->
-  <script  src="./js/admin.js">
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-      document.querySelectorAll('.sidebar button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      const buttons = document.querySelectorAll('.sidebar button');
-      buttons.forEach(btn => {
-        if (btn.getAttribute('onclick').includes(id)) {
-          btn.classList.add('active');
-        }
-      });
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    window.onload = function () {
-      showSection('dashboard');
-    };
-
-    function submitStudent() {
-      alert("Student submitted!");
-      // Add your submission logic here
-    }
-
-    function clearForm() {
-      document.querySelectorAll('.con input, .con select').forEach(el => el.value = '');
-    }
-  </script>
-
+  <script src="./js/admin.js"></script>
 </body>
 </html>

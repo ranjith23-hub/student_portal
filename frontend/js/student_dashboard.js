@@ -41,27 +41,24 @@ async function loadMarks() {
             return;
         }
         const student = await res.json();
-        const marksRes = await fetch(`http://localhost:8000/admin/marks/${student.id}`);
-        if (!marksRes.ok) {
-            document.getElementById('marksTableBody').innerHTML = '<tr><td colspan="2">No marks found.</td></tr>';
-            return;
-        }
-        const marks = await marksRes.json();
+        const marks = student.marks;
         document.getElementById('marksTableBody').innerHTML = `
-            <tr><td>Software Engineering</td><td>${marks.software_engineering || 0}</td></tr>
-            <tr><td>Computer Networks</td><td>${marks.computer_networks || 0}</td></tr>
-            <tr><td>Compiler Design</td><td>${marks.compiler_design || 0}</td></tr>
-            <tr><td>JavaScript Framework</td><td>${marks.javascript_framework || 0}</td></tr>
-            <tr><td>Cloud Computing</td><td>${marks.cloud_computing || 0}</td></tr>
-            <tr><td>Web Technology Laboratory</td><td>${marks.web_technology_lab || 0}</td></tr>
-            <tr><td>Computer Networks Laboratory</td><td>${marks.computer_networks_lab || 0}</td></tr>
-            <tr><td>Compiler Design Laboratory</td><td>${marks.compiler_design_lab || 0}</td></tr>
-            <tr><td><strong>Average Marks</strong></td><td><strong>${marks.average_marks || 0}</strong></td></tr>
+            <tr><td>CN</td><td>${marks.cn !== null ? marks.cn : 'N/A'}</td></tr>
+            <tr><td>SE</td><td>${marks.se !== null ? marks.se : 'N/A'}</td></tr>
+            <tr><td>CD</td><td>${marks.cd !== null ? marks.cd : 'N/A'}</td></tr>
+            <tr><td>JS</td><td>${marks.js !== null ? marks.js : 'N/A'}</td></tr>
+            <tr><td>Cloud</td><td>${marks.cloud !== null ? marks.cloud : 'N/A'}</td></tr>
+            <tr><td><strong>Average Marks</strong></td><td><strong>${calculateAverage(marks)}</strong></td></tr>
         `;
     } catch (err) {
         document.getElementById('marksTableBody').innerHTML = '<tr><td colspan="2">Error loading marks.</td></tr>';
         console.error('Error:', err);
     }
+}
+
+function calculateAverage(marks) {
+    const validMarks = [marks.cn, marks.se, marks.cd, marks.js, marks.cloud].filter(m => m !== null);
+    return validMarks.length > 0 ? (validMarks.reduce((a, b) => a + b, 0) / validMarks.length).toFixed(2) : 'N/A';
 }
 
 async function loadAttendance() {
@@ -76,32 +73,22 @@ async function loadAttendance() {
             return;
         }
         const student = await res.json();
-        const percentageRes = await fetch(`http://localhost:8000/admin/attendance_percentage/${student.id}`);
-        if (!percentageRes.ok) {
+        const roll_no = student.id;
+        const attendanceRes = await fetch(`http://localhost:8000/attendance/${roll_no}`);
+        if (!attendanceRes.ok) {
             document.getElementById('attendanceTableBody').innerHTML = '<tr><td colspan="2">No attendance records found.</td></tr>';
             return;
         }
-        const percentages = await percentageRes.json();
-        const tableBody = document.getElementById('attendanceTableBody');
-        tableBody.innerHTML = '';
-        const subjects = [
-            'Software Engineering',
-            'Computer Networks',
-            'Compiler Design',
-            'JavaScript Framework',
-            'Cloud Computing',
-            'Web Technology Lab',
-            'Computer Networks Lab',
-            'Compiler Design Lab'
-        ];
-        subjects.forEach((subject, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${subject}</td>
-                <td>${percentages[`sub${index + 1}`]}%</td>
-            `;
-            tableBody.appendChild(row);
-        });
+        const attendance = await attendanceRes.json();
+        const details = attendance.details;
+        document.getElementById('attendanceTableBody').innerHTML = `
+            <tr><td>CN</td><td>${details.cn.percentage}%</td></tr>
+            <tr><td>SE</td><td>${details.se.percentage}%</td></tr>
+            <tr><td>CD</td><td>${details.cd.percentage}%</td></tr>
+            <tr><td>JS</td><td>${details.js.percentage}%</td></tr>
+            <tr><td>Cloud</td><td>${details.cloud.percentage}%</td></tr>
+            <tr><td><strong>Overall Attendance</strong></td><td><strong>${attendance.attendance_percentage}%</strong></td></tr>
+        `;
     } catch (err) {
         document.getElementById('attendanceTableBody').innerHTML = '<tr><td colspan="2">Error loading attendance records.</td></tr>';
         console.error('Error:', err);
