@@ -1,10 +1,53 @@
-<!DOCTYPE html  ng-app="myApp">
-<html lang="en">
+<!DOCTYPE html >
+<html lang="en" ng-app="myApp">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TEACHERS PANEL</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+  .student-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+  }
+
+  .student-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+
+  .student-name {
+    font-weight: bold;
+    flex: 1;
+  }
+
+  .student-status label {
+    margin-right: 15px;
+  }
+
+  .bu {
+    margin-top: 20px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .bu:hover {
+    background-color: #45a049;
+  }
+</style>
+
   <style>
     * {
       margin: 0;
@@ -212,6 +255,26 @@
       font-weight: 500;
       min-height: 20px;
     }
+    .but {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .but:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
 
     #attendanceTable, #marksTable {
       width: 100%;
@@ -270,7 +333,7 @@
     }
   </style>
 </head>
-<body>
+<body ng-controller="myCtrl">
   <div class="sidebar">
     <h2>TEACHERS PANEL</h2>
     <div class="nav-buttons">
@@ -345,16 +408,36 @@
       <div id="hello" class="student-card"></div>
     </div>
 
-    <div id="manageAttendance" class="section">
-      <h3>Manage Attendance</h3>
-      <p>Track and update attendance records for students.</p>
-      <label class="la">Enter the Subject :</label>
-      <input name="Subject" class="in" id="subject" placeholder="Enter Subject Name" />
-      <label class ="la">Enter the no of hours : </label>
-      <input name="hours" class="in" id="hours" type="number" placeholder="Enter no of hours" />
-      
-      
+    <div id="manageAttendance" class="section" ng-controller="myCtrl">
+    <h3>Manage Attendance</h3>
+    <button class="but" onclick="sendAlerts()">Send Attendance Alerts</button>
+    <div id="result"></div>
+    
+    <p>Track and update attendance records for students.</p>
+
+    <label class="la">Enter the Subject :</label>
+    <input class="in" ng-model="subject" placeholder="Enter Subject Name" />
+
+    <label class="la">Enter the no of hours : </label>
+    <input class="in" type="number" ng-model="hours" placeholder="Enter no of hours" />
+
+    <div class="student-list">
+      <h2 class="la">Student Attendance</h2>
+      <div class="student-row" ng-repeat="student in students">
+        <div class="student-name">{{student.name}}</div>
+        <div class="student-status">
+          <label>
+            <input type="radio" ng-model="student.status" value="Present" /> Present
+          </label>
+          <label>
+            <input type="radio" ng-model="student.status" value="Absent" /> Absent
+          </label>
+        </div>
+      </div>
     </div>
+
+    <button class="bu" ng-click="submitAttendance()">Submit Attendance</button>
+  </div>
 
     <div id="manageMarks" class="section">
       <h3>Manage Marks</h3>
@@ -376,6 +459,56 @@
       <div id="marksContainer"></div>
     </div>
   </div>
+
+<script>
+    var app = angular.module('myApp', []);
+
+    app.controller('myCtrl', function($scope, $http) {
+
+      $http.get('http://localhost:8000/admin/students').then(function(response) {
+      $scope.students = response.data || [];
+      }, function(error) {
+        console.error("Error fetching students:", error);
+      });
+      $scope.submitAttendance = function() {
+        const payload = {
+          subject: $scope.subject,
+          hours: $scope.hours,
+          records: $scope.students.map(s => ({
+            student_id: s.id,
+            status: s.status
+          }))
+        };
+
+        console.log("Submitting:", payload); 
+        $http.post('http://localhost:8000/admin/attendance/bulk', payload).then(function(response) {
+          alert("Attendance submitted successfully!");
+        }, function(error) {
+          console.error("Error submitting attendance:", error);
+        });
+      };
+    });
+
+    async function sendAlerts() {
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerText = "Sending alerts... please wait.";
+    try {
+        const response = await fetch("http://127.0.0.1:8000/admin/send_attendance_alerts", {
+            method: "POST"
+        });        
+        if (!response.ok) {
+            throw new Error("Failed to send alerts");
+        }
+        const data = await response.json();
+        const names = data.alerts_sent.map(alert => alert.student);
+        const uniqueNames = [...new Set(names)];
+        resultDiv.innerHTML = "<b>Alerts sent to:</b><br>" + uniqueNames.join("<br>");
+    } catch (error) {
+        resultDiv.innerText = "Error: " + error.message;
+    }
+}
+
+  </script>
 
   <script src="./js/admin.js"></script>
 </body>

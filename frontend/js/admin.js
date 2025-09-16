@@ -311,3 +311,5 @@ function submitMarks() {
         alert('An error occurred while submitting marks');
     });
 }
+
+      

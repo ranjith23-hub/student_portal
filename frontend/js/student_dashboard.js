@@ -1,6 +1,5 @@
 const params = new URLSearchParams(window.location.search);
 const email = params.get('email');
-
 async function loadStudent() {
     if (!email) {
         document.getElementById('student-details').innerHTML = '<p>Invalid access. No email provided.</p>';
@@ -12,7 +11,9 @@ async function loadStudent() {
             document.getElementById('student-details').innerHTML = '<p>Student not found.</p>';
             return;
         }
-        const student = await res.json();
+        const student = await res.json();       
+        const roll=student.id;
+        localStorage.setItem('rollNo', roll);
         document.getElementById('student-details').innerHTML = `
             <p><strong>Roll No:</strong> ${student.id}</p>
             <p><strong>Name:</strong> ${student.name}</p>

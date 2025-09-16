@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Attendance Alerts</title>
+    <style>
+        .but {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .but:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    
+    <div id="result"></div>
+
+    <script>
+        async function sendAlerts() {
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerText = "Sending alerts... please wait.";
+    try {
+        const response = await fetch("http://127.0.0.1:8000/admin/send_attendance_alerts", {
+            method: "POST"
+        });        
+        if (!response.ok) {
+            throw new Error("Failed to send alerts");
+        }
+        const data = await response.json();
+        const names = data.alerts_sent.map(alert => alert.student);
+        const uniqueNames = [...new Set(names)];
+        resultDiv.innerHTML = "<b>Alerts sent to:</b><br>" + uniqueNames.join("<br>");
+    } catch (error) {
+        resultDiv.innerText = "Error: " + error.message;
+    }
+}
+
+    </script>
+</body>
+</html>

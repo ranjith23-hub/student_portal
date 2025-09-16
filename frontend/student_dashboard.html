@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="attendanceApp"> >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Portal - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #f4f4f4; }
+    .good { background: #dcfce7; }
+    .warn { background: #fff7ed; }
+    .bad { background: #fee2e2; }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -282,9 +292,8 @@
     <button class="logout-btn" onclick="logout()">🚪 Logout</button>
   </div>
 
-  <!-- Main Content -->
+ 
   <div class="main">
-    <!-- Dashboard -->
     <div id="dashboard" class="section">
       <h3>DASHBOARD</h3>
       <p>Welcome to your student dashboard.</p>
@@ -307,19 +316,33 @@
         <tbody id="marksTableBody"></tbody>
       </table>
     </div>
-
-    <!-- Attendance -->
-    <div id="attendance" class="section">
-      <h3>Attendance</h3>
-      <p>View your attendance records.</p>
-      <table id="attendanceTable">
+<div id="attendance" class="section" ng-controller="AttendanceCtrl" ng-init="getAttendance()"> 
+      <h2>Student Attendance</h2>
+      <table>
         <thead>
           <tr>
             <th>Subject</th>
-            <th>Attendance Percentage</th>
+            <th>Attended</th>
+            <th>Total</th>
+            <th>Percentage</th>
           </tr>
         </thead>
-        <tbody id="attendanceTableBody"></tbody>
+        <tbody>
+          <tr ng-repeat="(subject, data) in attendance.attendance"
+              ng-class="{
+                'good': (data.total > 0 && (data.attended / data.total * 100) >= 75),
+                'warn': (data.total > 0 && (data.attended / data.total * 100) < 75 && (data.attended / data.total * 100) >= 50),
+                'bad': (data.total > 0 && (data.attended / data.total * 100) < 50)
+              }">
+            <td>{{subject | uppercase}}</td>
+            <td>{{data.attended}}</td>
+            <td>{{data.total}}</td>
+            <td>
+              <span ng-if="data.total > 0">{{ (data.attended / data.total * 100) | number:2 }}%</span>
+              <span ng-if="data.total == 0">N/A</span>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
@@ -339,7 +362,25 @@
       </div>
     </div>
   </div>
+  <script>
+    angular.module("attendanceApp", [])
+      .controller("AttendanceCtrl", function($scope, $http) {
+        $scope.rollNo = localStorage.getItem('rollNo'); // stored at login
+        $scope.attendance = { attendance: {} };
 
+        $scope.getAttendance = function() {
+          if (!$scope.rollNo) return;
+          $http.get("http://localhost:8000/attendance/" + $scope.rollNo)
+            .then(function(response) {
+              $scope.attendance = response.data;
+            })
+            .catch(function(error) {
+              console.error("Error fetching attendance:", error);
+              alert("Failed to fetch attendance");
+            });
+        };
+      });
+  </script>
   <script src="./js/student_dashboard.js"></script>
 </body>
 </html>
