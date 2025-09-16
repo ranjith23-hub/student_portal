@@ -12,7 +12,17 @@ from flask import Flask, request, jsonify
 from typing import Optional, List
 from fastapi.staticfiles import StaticFiles
 import logging
+import smtplib
+import os
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_USERNAME = "ranjithkumar.official.23@gmail.com"
+SMTP_PASSWORD = "pwcq xeme slst hapv"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -63,19 +73,33 @@ class Teacher(Base):
     experience = Column(Integer, nullable=True)
     date_of_joining = Column(Date, nullable=True)
 
-class Attendance(Base):
-    __tablename__ = "attendance"
+class cn(Base):
+    __tablename__ = "cn"
     roll_no = Column(String, primary_key=True, index=True)
-    cn_total = Column(Integer, default=0)
-    cn_attended = Column(Integer, default=0)
-    se_total = Column(Integer, default=0)
-    se_attended = Column(Integer, default=0)
-    cd_total = Column(Integer, default=0)
-    cd_attended = Column(Integer, default=0)
-    js_total = Column(Integer, default=0)
-    js_attended = Column(Integer, default=0)
-    cloud_total = Column(Integer, default=0)
-    cloud_attended = Column(Integer, default=0)
+    total = Column(Integer, default=0)
+    attended = Column(Integer, default=0)
+
+class se(Base):
+    __tablename__ = "se"
+    roll_no = Column(String, primary_key=True, index=True)
+    total = Column(Integer, default=0)
+    attended = Column(Integer, default=0)
+class cd(Base):
+    __tablename__ = "cd"
+    roll_no = Column(String, primary_key=True, index=True)
+    total = Column(Integer, default=0)
+    attended = Column(Integer, default=0)
+class js(Base):
+    __tablename__ = "js"
+    roll_no = Column(String, primary_key=True, index=True)
+    total = Column(Integer, default=0)
+    attended = Column(Integer, default=0)
+class cloud(Base):
+    __tablename__ = "cloud"
+    roll_no = Column(String, primary_key=True, index=True)
+    total = Column(Integer, default=0)
+    attended = Column(Integer, default=0)
+
 
 class Marks(Base):
     __tablename__ = "marks"
@@ -151,7 +175,69 @@ def get_db():
     finally:
         db.close()
 
-# Login
+
+class AttendanceRecord(BaseModel):
+    student_id: int
+    status: str
+
+class AttendancePayload(BaseModel):
+    subject: str
+    hours: int
+    records: list[AttendanceRecord]
+
+SUBJECT_TABLES = {
+    "cn": cn,
+    "se": se,
+    "cd": cd,
+    "js": js,
+    "cloud": cloud
+}
+
+
+@app.get("/attendance/{roll_no}")
+def get_attendance(roll_no: str, db: Session = Depends(get_db)):
+    result = {}
+
+    for subject, table in SUBJECT_TABLES.items():
+        attendance = db.query(table).filter(table.roll_no == roll_no).first()
+        if attendance:
+            result[subject] = {
+                "attended": attendance.attended,
+                "total": attendance.total
+            }
+        else:
+            result[subject] = {
+                "attended": 0,
+                "total": 0
+            }
+
+    return {"roll_no": roll_no, "attendance": result}
+
+
+@app.post("/admin/attendance/bulk")
+def submit_attendance(payload: AttendancePayload, db: Session = Depends(get_db)):
+    subject = payload.subject.lower()
+    if subject not in SUBJECT_TABLES:
+        raise HTTPException(status_code=400, detail="Invalid subject")
+
+    table = SUBJECT_TABLES[subject]
+    print(payload)
+    for record in payload.records:
+        roll_no = str(record.student_id)
+        attendance = db.query(table).filter(table.roll_no == roll_no).first()
+
+        if not attendance:
+            attendance = table(roll_no=roll_no, total=0, attended=0)
+            db.add(attendance)
+
+        attendance.total = (attendance.total or 0) + payload.hours
+        if record.status == "Present":
+            attendance.attended = (attendance.attended or 0) + payload.hours
+
+    db.commit()
+    return {"message": f"Attendance updated for {subject.upper()}"}
+
+
 @app.post("/login")
 def login(
     email: str = Form(...),
@@ -479,6 +565,63 @@ def get_grade(marks: float) -> str:
     if marks >= 60: return "B"
     if marks >= 45: return "C"
     return "F"
+
+
+def send_email(to_email: str, subject: str, body: str):
+    try:
+        msg = MIMEMultipart()
+        msg["From"] = SMTP_USERNAME
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.sendmail(SMTP_USERNAME, to_email, msg.as_string())
+    except Exception as e:
+        logger.error(f"Failed to send email to {to_email}: {e}")
+
+
+ATTENDANCE_THRESHOLD = 75  # %
+
+@app.post("/admin/send_attendance_alerts")
+def send_attendance_alerts(db: Session = Depends(get_db)):
+    students = db.query(Student).all()
+    alerts_sent = []
+
+    for student in students:
+        total_classes = 0
+        attended_classes = 0
+
+        for subject, table in SUBJECT_TABLES.items():
+            record = db.query(table).filter(table.roll_no == student.id).first()
+            if record:
+                total_classes = record.total or 0
+                attended_classes = record.attended or 0
+
+            if total_classes > 0:
+                percentage = (attended_classes / total_classes) * 100
+                if percentage < ATTENDANCE_THRESHOLD:
+                    subject1 = "Low Attendance Alert"
+                    body = f"""
+                    Dear {student.name},
+
+                    Your current attendance percentage is {percentage:.2f}%  in  subject {subject},
+                    which is below the required threshold of {ATTENDANCE_THRESHOLD}%.
+
+                    Please ensure better participation in upcoming classes.
+
+                    Regards,
+                    Student Attendance Management System
+                    """
+                    send_email(student.email, subject1, body)
+                    alerts_sent.append({"student": student.name, "email": student.email, "attendance": round(percentage, 2)})
+
+    if not alerts_sent:
+        return {"message": "No students found with low attendance."}
+
+    return {"alerts_sent": alerts_sent}
 
 if __name__ == "__main__":
     import uvicorn
