@@ -21,8 +21,8 @@ from email import encoders
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USERNAME = "ranjithkumar.official.23@gmail.com"
-SMTP_PASSWORD = "pwcq xeme slst hapv"
+SMTP_USERNAME = "SENDER_EMAIL"
+SMTP_PASSWORD = "YOUR_APP_PASSWORD"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
